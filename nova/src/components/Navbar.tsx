@@ -87,7 +87,7 @@ const Navbar = () => {
   };
   return (
     <>
-      <nav className="flex items-center justify-between pl-1 pr-4 h-16 bg-black">
+      <nav className="flex items-center z-100 justify-between pl-1 pr-4 h-16 bg-black">
         <Image
           src={NovaLogo}
           alt="Logo"
@@ -192,7 +192,7 @@ const Navbar = () => {
                         },
                       }}
                     />
-                    <span className="text-sm text-purple-500 font-medium translate-y-0.5">
+                    <span className="text-sm text-purple-500 font-medium translate-y-0.5 group-hover:mr-5 transition-all duration-200">
                       01
                     </span>
                     Home
@@ -264,7 +264,7 @@ const Navbar = () => {
                         },
                       }}
                     />
-                    <span className="text-sm text-purple-500 font-medium translate-y-0.5">
+                    <span className="text-sm text-purple-500 font-medium translate-y-0.5 group-hover:mr-5 transition-all duration-200">
                       02
                     </span>
                     Studio
@@ -336,7 +336,7 @@ const Navbar = () => {
                         },
                       }}
                     />
-                    <span className="text-sm text-purple-500 font-medium translate-y-0.5">
+                    <span className="text-sm text-purple-500 font-medium translate-y-0.5 group-hover:mr-5 transition-all duration-200">
                       03
                     </span>
                     About
@@ -408,7 +408,7 @@ const Navbar = () => {
                         },
                       }}
                     />
-                    <span className="text-sm text-purple-500 font-medium translate-y-0.5">
+                    <span className="text-sm text-purple-500 font-medium translate-y-0.5 group-hover:mr-5 transition-all duration-200">
                       04
                     </span>
                     Contact
