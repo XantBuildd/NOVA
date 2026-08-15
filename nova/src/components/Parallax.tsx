@@ -2,26 +2,19 @@
 
 import Image from "next/image";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { useEffect } from "react";
 
 import Background from "@/assets/Studio-section-background.png";
 import Rock from "@/assets/Studio-rock.png";
 import RockLeft from "@/assets/Studio-rock-left.png";
 
 const Parallax = () => {
-  /*
-   * --------------------------------
-   * MOUSE
-   * --------------------------------
-   */
+  //mouse
 
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
-  /*
-   * --------------------------------
-   * SUAVIZADO
-   * --------------------------------
-   */
+  // soft motion
 
   const smoothX = useSpring(mouseX, {
     stiffness: 100,
@@ -35,67 +28,69 @@ const Parallax = () => {
     mass: 0.5,
   });
 
-  /*
-   * --------------------------------
-   * TILT
-   * --------------------------------
-   */
+  // tilt
 
   const rotateY = useTransform(smoothX, [-1, 1], [-8, 8]);
 
   const rotateX = useTransform(smoothY, [-1, 1], [8, -8]);
 
-  /*
-   * --------------------------------
-   * ROCK RIGHT
-   * --------------------------------
-   */
+  //rock right
 
   const rockX = useTransform(smoothX, [-1, 1], [-25, 25]);
 
   const rockY = useTransform(smoothY, [-1, 1], [-15, 15]);
 
-  /*
-   * --------------------------------
-   * ROCK LEFT
-   * --------------------------------
-   */
+  // rock left
 
   const rockLeftX = useTransform(smoothX, [-1, 1], [-12, 12]);
 
   const rockLeftY = useTransform(smoothY, [-1, 1], [-8, 8]);
 
-  /*
-   * --------------------------------
-   * MOUSE HANDLER
-   * --------------------------------
-   */
+  // background
 
-  const handleMouseMove = (event: React.MouseEvent<HTMLElement>) => {
-    const rect = event.currentTarget.getBoundingClientRect();
+  const backgroundX = useTransform(smoothX, [-1, 1], [-8, 8]);
 
-    const x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+  const backgroundY = useTransform(smoothY, [-1, 1], [-5, 5]);
 
-    const y = ((event.clientY - rect.top) / rect.height) * 2 - 1;
+  //mouse handler
 
-    mouseX.set(x);
-    mouseY.set(y);
-  };
+  useEffect(() => {
+    const handleMouseMove = (event: MouseEvent) => {
+      const x = (event.clientX / window.innerWidth) * 2 - 1;
 
-  const handleMouseLeave = () => {
-    mouseX.set(0);
-    mouseY.set(0);
-  };
+      const y = (event.clientY / window.innerHeight) * 2 - 1;
+
+      mouseX.set(x);
+      mouseY.set(y);
+    };
+
+    const handleMouseLeave = () => {
+      mouseX.set(0);
+      mouseY.set(0);
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mouseleave", handleMouseLeave);
+
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseleave", handleMouseLeave);
+    };
+  }, [mouseX, mouseY]);
 
   return (
-    <section
-      className="w-full h-full overflow-hidden -z-1"
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-    >
+    <section className="w-full h-full mt-10 overflow-hidden bg-red-500/10">
       {/* BACKGROUND */}
 
-      <div className="absolute inset-0">
+      <motion.div
+        className="absolute -inset-4 z-0"
+        style={{
+          x: backgroundX,
+          y: backgroundY,
+          rotateX,
+          rotateY,
+        }}
+      >
         <span className="absolute top-0 left-0 w-full h-16 bg-linear-to-b from-black to-transparent blur-[10px] -z-1" />
 
         <Image
@@ -105,7 +100,7 @@ const Parallax = () => {
           fill
           priority
         />
-      </div>
+      </motion.div>
 
       {/* ROCK RIGHT */}
 

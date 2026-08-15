@@ -15,7 +15,7 @@ const Studio = () => {
 
       {/* title and description */}
 
-      <article className="mb-10">
+      <article className="mb-10 z-30">
         <h2 className="text-[1.6rem] text-white/80 font-normal mt-4">
           The Studio <br /> where ideas <br /> become{" "}
           <span className="italic text-purple-500/80">impact</span>.
