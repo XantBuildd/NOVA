@@ -25,7 +25,7 @@ const Canvas = () => {
     <canvas
       ref={canvasRef}
       id="canvas"
-      className="absolute inset-0 w-full h-[calc(100vh-3rem)] mt-16 z-100"
+      className="absolute inset-0 w-full h-[calc(100vh-3rem)] mt-16 z-0"
     ></canvas>
   );
 };

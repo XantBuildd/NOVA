@@ -18,8 +18,8 @@ const Navbar = () => {
     hidden: {},
     visible: {
       transition: {
-        staggerChildren: 0.08,
         delayChildren: 0.35,
+        staggerChildren: 0.15,
       },
     },
   };
@@ -27,7 +27,7 @@ const Navbar = () => {
   const itemVariants: Variants = {
     hidden: {
       opacity: 0,
-      y: 50,
+      y: 40,
     },
     visible: {
       opacity: 1,
@@ -129,7 +129,7 @@ const Navbar = () => {
               }}
               className="fixed inset-0 z-50 bg-black"
             >
-              <motion.div className="flex items-center justify-between w-full h-16 pr-4 pl-1">
+              <motion.div className="flex items-center justify-between w-full h-16 pr-4 pl-1 z-1000">
                 <Image
                   src={NovaLogo}
                   alt="Logo"
@@ -157,15 +157,18 @@ const Navbar = () => {
                   variants={menuVariants}
                   initial="hidden"
                   animate="visible"
-                  className="text-white text-[1.5rem] font-light w-2/3 h-1/2 flex mt-5 flex-col justify-center gap-8 px-4"
+                  className="text-white text-[1.5rem] font-light w-2/3 h-1/2 flex mt-5 flex-col justify-center gap-8 px-4 z-1000"
                 >
                   <motion.li
                     variants={itemVariants}
-                    whileHover="hover"
                     className="group relative w-fit cursor-pointer flex items-center gap-2"
                   >
-                    <motion.span
-                      className="
+                    <motion.div
+                      whileHover="hover"
+                      className="group relative flex items-center gap-2 cursor-pointer"
+                    >
+                      <motion.span
+                        className="
     pointer-events-none
     absolute
     left-1/2
@@ -177,32 +180,32 @@ const Navbar = () => {
     bg-purple-500/30
     blur-xl
   "
-                      initial={{
-                        opacity: 0,
-                        x: 0,
-                      }}
-                      variants={{
-                        hover: {
-                          opacity: 1,
-                          x: -10,
-                          transition: {
-                            duration: 0.45,
-                            ease: "easeOut",
+                        initial={{
+                          opacity: 0,
+                          x: 0,
+                        }}
+                        variants={{
+                          hover: {
+                            opacity: 1,
+                            x: -10,
+                            transition: {
+                              duration: 0.45,
+                              ease: "easeOut",
+                            },
                           },
-                        },
-                      }}
-                    />
-                    <span className="text-sm text-purple-500 font-medium translate-y-0.5 group-hover:mr-5 transition-all duration-200">
-                      01
-                    </span>
-                    Home
-                    <Link href="/" className="ml-4">
-                      <motion.span variants={arrowVariants}>
-                        <FiArrowUpRight className="text-purple-500 scale-0 group-hover:scale-100 transition-all duration-200 text-base w-5 h-5 translate-y-0.5 ml-4" />
-                      </motion.span>
-                    </Link>
-                    <motion.span
-                      className="
+                        }}
+                      />
+                      <span className="text-sm text-purple-500 font-medium translate-y-0.5 group-hover:mr-5 transition-all duration-200">
+                        01
+                      </span>
+                      Home
+                      <Link href="/" className="ml-4">
+                        <motion.span variants={arrowVariants}>
+                          <FiArrowUpRight className="text-purple-500 scale-0 group-hover:scale-100 transition-all duration-200 text-base w-5 h-5 translate-y-0.5 ml-4" />
+                        </motion.span>
+                      </Link>
+                      <motion.span
+                        className="
     pointer-events-none
     absolute
     left-0
@@ -215,29 +218,33 @@ const Navbar = () => {
     to-transparent
     blur-[2px]
   "
-                      initial={{
-                        opacity: 0,
-                        scaleX: 0.5,
-                      }}
-                      variants={{
-                        hover: {
-                          opacity: 1,
-                          scaleX: 1,
-                          transition: {
-                            duration: 0.4,
-                            ease: "easeOut",
+                        initial={{
+                          opacity: 0,
+                          scaleX: 0.5,
+                        }}
+                        variants={{
+                          hover: {
+                            opacity: 1,
+                            scaleX: 1,
+                            transition: {
+                              duration: 0.4,
+                              ease: "easeOut",
+                            },
                           },
-                        },
-                      }}
-                    />
+                        }}
+                      />
+                    </motion.div>
                   </motion.li>
                   <motion.li
                     variants={itemVariants}
-                    whileHover="hover"
                     className="group relative w-fit cursor-pointer flex items-center gap-2"
                   >
-                    <motion.span
-                      className="
+                    <motion.div
+                      whileHover="hover"
+                      className="group relative flex items-center gap-2 cursor-pointer"
+                    >
+                      <motion.span
+                        className="
     pointer-events-none
     absolute
     left-1/2
@@ -249,32 +256,32 @@ const Navbar = () => {
     bg-purple-500/30
     blur-xl
   "
-                      initial={{
-                        opacity: 0,
-                        x: 0,
-                      }}
-                      variants={{
-                        hover: {
-                          opacity: 1,
-                          x: -10,
-                          transition: {
-                            duration: 0.45,
-                            ease: "easeOut",
+                        initial={{
+                          opacity: 0,
+                          x: 0,
+                        }}
+                        variants={{
+                          hover: {
+                            opacity: 1,
+                            x: -10,
+                            transition: {
+                              duration: 0.45,
+                              ease: "easeOut",
+                            },
                           },
-                        },
-                      }}
-                    />
-                    <span className="text-sm text-purple-500 font-medium translate-y-0.5 group-hover:mr-5 transition-all duration-200">
-                      02
-                    </span>
-                    Studio
-                    <Link href="/" className="ml-4">
-                      <motion.span variants={arrowVariants}>
-                        <FiArrowUpRight className="text-purple-500 scale-0 group-hover:scale-100 transition-all duration-200 text-base w-5 h-5 translate-y-0.5 ml-4" />
-                      </motion.span>
-                    </Link>
-                    <motion.span
-                      className="
+                        }}
+                      />
+                      <span className="text-sm text-purple-500 font-medium translate-y-0.5 group-hover:mr-5 transition-all duration-200">
+                        02
+                      </span>
+                      Studio
+                      <Link href="/" className="ml-4">
+                        <motion.span variants={arrowVariants}>
+                          <FiArrowUpRight className="text-purple-500 scale-0 group-hover:scale-100 transition-all duration-200 text-base w-5 h-5 translate-y-0.5 ml-4" />
+                        </motion.span>
+                      </Link>
+                      <motion.span
+                        className="
     pointer-events-none
     absolute
     left-0
@@ -287,29 +294,33 @@ const Navbar = () => {
     to-transparent
     blur-[2px]
   "
-                      initial={{
-                        opacity: 0,
-                        scaleX: 0.5,
-                      }}
-                      variants={{
-                        hover: {
-                          opacity: 1,
-                          scaleX: 1,
-                          transition: {
-                            duration: 0.4,
-                            ease: "easeOut",
+                        initial={{
+                          opacity: 0,
+                          scaleX: 0.5,
+                        }}
+                        variants={{
+                          hover: {
+                            opacity: 1,
+                            scaleX: 1,
+                            transition: {
+                              duration: 0.4,
+                              ease: "easeOut",
+                            },
                           },
-                        },
-                      }}
-                    />
+                        }}
+                      />
+                    </motion.div>
                   </motion.li>
                   <motion.li
                     variants={itemVariants}
-                    whileHover="hover"
                     className="group relative w-fit cursor-pointer flex items-center gap-2"
                   >
-                    <motion.span
-                      className="
+                    <motion.div
+                      whileHover="hover"
+                      className="group relative flex items-center gap-2 cursor-pointer"
+                    >
+                      <motion.span
+                        className="
     pointer-events-none
     absolute
     left-1/2
@@ -321,32 +332,32 @@ const Navbar = () => {
     bg-purple-500/30
     blur-xl
   "
-                      initial={{
-                        opacity: 0,
-                        x: 0,
-                      }}
-                      variants={{
-                        hover: {
-                          opacity: 1,
-                          x: -10,
-                          transition: {
-                            duration: 0.45,
-                            ease: "easeOut",
+                        initial={{
+                          opacity: 0,
+                          x: 0,
+                        }}
+                        variants={{
+                          hover: {
+                            opacity: 1,
+                            x: -10,
+                            transition: {
+                              duration: 0.45,
+                              ease: "easeOut",
+                            },
                           },
-                        },
-                      }}
-                    />
-                    <span className="text-sm text-purple-500 font-medium translate-y-0.5 group-hover:mr-5 transition-all duration-200">
-                      03
-                    </span>
-                    About
-                    <Link href="/" className="ml-4">
-                      <motion.span variants={arrowVariants}>
-                        <FiArrowUpRight className="text-purple-500 scale-0 group-hover:scale-100 transition-all duration-200 text-base w-5 h-5 translate-y-0.5 ml-4" />
-                      </motion.span>
-                    </Link>
-                    <motion.span
-                      className="
+                        }}
+                      />
+                      <span className="text-sm text-purple-500 font-medium translate-y-0.5 group-hover:mr-5 transition-all duration-200">
+                        03
+                      </span>
+                      About
+                      <Link href="/" className="ml-4">
+                        <motion.span variants={arrowVariants}>
+                          <FiArrowUpRight className="text-purple-500 scale-0 group-hover:scale-100 transition-all duration-200 text-base w-5 h-5 translate-y-0.5 ml-4" />
+                        </motion.span>
+                      </Link>
+                      <motion.span
+                        className="
     pointer-events-none
     absolute
     left-0
@@ -359,29 +370,33 @@ const Navbar = () => {
     to-transparent
     blur-[2px]
   "
-                      initial={{
-                        opacity: 0,
-                        scaleX: 0.5,
-                      }}
-                      variants={{
-                        hover: {
-                          opacity: 1,
-                          scaleX: 1,
-                          transition: {
-                            duration: 0.4,
-                            ease: "easeOut",
+                        initial={{
+                          opacity: 0,
+                          scaleX: 0.5,
+                        }}
+                        variants={{
+                          hover: {
+                            opacity: 1,
+                            scaleX: 1,
+                            transition: {
+                              duration: 0.4,
+                              ease: "easeOut",
+                            },
                           },
-                        },
-                      }}
-                    />
+                        }}
+                      />
+                    </motion.div>
                   </motion.li>
                   <motion.li
                     variants={itemVariants}
-                    whileHover="hover"
                     className="group relative w-fit cursor-pointer flex items-center gap-2"
                   >
-                    <motion.span
-                      className="
+                    <motion.div
+                      whileHover="hover"
+                      className="group relative flex items-center gap-2 cursor-pointer"
+                    >
+                      <motion.span
+                        className="
     pointer-events-none
     absolute
     left-1/2
@@ -393,32 +408,32 @@ const Navbar = () => {
     bg-purple-500/30
     blur-xl
   "
-                      initial={{
-                        opacity: 0,
-                        x: 0,
-                      }}
-                      variants={{
-                        hover: {
-                          opacity: 1,
-                          x: -10,
-                          transition: {
-                            duration: 0.45,
-                            ease: "easeOut",
+                        initial={{
+                          opacity: 0,
+                          x: 0,
+                        }}
+                        variants={{
+                          hover: {
+                            opacity: 1,
+                            x: -10,
+                            transition: {
+                              duration: 0.45,
+                              ease: "easeOut",
+                            },
                           },
-                        },
-                      }}
-                    />
-                    <span className="text-sm text-purple-500 font-medium translate-y-0.5 group-hover:mr-5 transition-all duration-200">
-                      04
-                    </span>
-                    Contact
-                    <Link href="/" className="ml-4">
-                      <motion.span variants={arrowVariants}>
-                        <FiArrowUpRight className="text-purple-500 scale-0 group-hover:scale-100 transition-all duration-200 text-base w-5 h-5 translate-y-0.5 ml-4" />
-                      </motion.span>
-                    </Link>
-                    <motion.span
-                      className="
+                        }}
+                      />
+                      <span className="text-sm text-purple-500 font-medium translate-y-0.5 group-hover:mr-5 transition-all duration-200">
+                        04
+                      </span>
+                      Contact
+                      <Link href="/" className="ml-4">
+                        <motion.span variants={arrowVariants}>
+                          <FiArrowUpRight className="text-purple-500 scale-0 group-hover:scale-100 transition-all duration-200 text-base w-5 h-5 translate-y-0.5 ml-4" />
+                        </motion.span>
+                      </Link>
+                      <motion.span
+                        className="
     pointer-events-none
     absolute
     left-0
@@ -431,21 +446,22 @@ const Navbar = () => {
     to-transparent
     blur-[2px]
   "
-                      initial={{
-                        opacity: 0,
-                        scaleX: 0.5,
-                      }}
-                      variants={{
-                        hover: {
-                          opacity: 1,
-                          scaleX: 1,
-                          transition: {
-                            duration: 0.4,
-                            ease: "easeOut",
+                        initial={{
+                          opacity: 0,
+                          scaleX: 0.5,
+                        }}
+                        variants={{
+                          hover: {
+                            opacity: 1,
+                            scaleX: 1,
+                            transition: {
+                              duration: 0.4,
+                              ease: "easeOut",
+                            },
                           },
-                        },
-                      }}
-                    />
+                        }}
+                      />
+                    </motion.div>
                   </motion.li>
                 </motion.ul>
 
@@ -469,7 +485,7 @@ const Navbar = () => {
                     ease: [0.76, 0, 0.24, 1],
                   }}
                   whileHover={{ scale: 1.05, transition: { duration: 0.2 } }}
-                  className="text-white flex items-center justify-center gap-4 w-[90%] px-4 py-2 mx-auto bg-black/70 backdrop:backdrop-blur-md rounded-xl mt-10 cursor-pointer"
+                  className="text-white flex items-center justify-center gap-4 w-[90%] px-4 py-2 mx-auto bg-black/70 backdrop:backdrop-blur-md rounded-xl mt-8 cursor-pointer"
                 >
                   <button className="rounded-full bg-linear-to-r opacity-80 from-violet-600/50 via-purple-500 to-purple-400/50 p-px shadow-[0_0_30px_rgba(168,85,247,0.25)] transition-all hover:scale-110 hover:shadow-[0_0_40px_rgba(168,85,247,0.5)] cursor-pointer">
                     <motion.span
@@ -491,7 +507,7 @@ const Navbar = () => {
 
                 {/* Footer of icons */}
 
-                <div className="text-white flex items-center mt-5">
+                <div className="text-white flex items-center my-5">
                   <motion.ul
                     variants={menuIconsVariants}
                     initial="hidden"
