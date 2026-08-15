@@ -19,17 +19,43 @@ export class ShapeGenerator {
   public generateConstellation(amount: number): Point[] {
     const points: Point[] = [];
 
-    points.push(...this.generateMainBranch(amount * 0.55));
+    /*
+     * La estructura principal ocupa aproximadamente
+     * la mitad de las partículas.
+     */
+    const mainAmount = Math.floor(amount * 0.6);
 
-    points.push(...this.generateSideBranches(points));
+    const main = this.generateMainBranch(mainAmount);
 
-    points.push(...this.generateAmbientParticles(80));
+    points.push(...main);
+
+    /*
+     * Ramas secundarias alrededor de la estructura.
+     */
+    points.push(...this.generateSideBranches(main));
+
+    /*
+     * Partículas pequeñas alrededor.
+     */
+    points.push(...this.generateAmbientParticles(Math.floor(amount * 0.35)));
 
     return points;
   }
 
   /**
-   * Rama principal
+   * Rama principal.
+   *
+   * Mantiene la idea original:
+   *
+   *       •
+   *        •
+   *         •
+   *          •
+   *           •
+   *            •
+   *
+   * Pero con pequeñas variaciones para que
+   * cada generación sea diferente.
    */
   private generateMainBranch(amount: number): Point[] {
     const points: Point[] = [];
@@ -38,24 +64,53 @@ export class ShapeGenerator {
     let y = this.height * 0.08;
 
     for (let i = 0; i < amount; i++) {
-      x -= this.width * 0.025;
-      y += this.height * 0.055;
+      /*
+       * Movimiento principal controlado.
+       *
+       * No dejamos que X se vaya demasiado rápido
+       * hacia la izquierda.
+       */
+      x -= this.width * 0.022;
 
-      x += (Math.random() - 0.5) * 30;
-      y += (Math.random() - 0.5) * 25;
+      y += this.height * 0.048;
 
-      if (this.insideForbiddenArea(x, y)) {
+      /*
+       * Variación orgánica.
+       */
+      const offsetX = (Math.random() - 0.5) * 45;
+
+      const offsetY = (Math.random() - 0.5) * 35;
+
+      const particleX = x + offsetX;
+      const particleY = y + offsetY;
+
+      /*
+       * Evitamos partículas fuera de pantalla.
+       */
+      if (
+        particleX < 20 ||
+        particleX > this.width - 20 ||
+        particleY < 20 ||
+        particleY > this.height - 20
+      ) {
+        continue;
+      }
+
+      if (this.insideForbiddenArea(particleX, particleY)) {
         continue;
       }
 
       const point: Point = {
         id: this.nextId++,
-        x,
-        y,
+        x: particleX,
+        y: particleY,
         type: "main",
         connections: [],
       };
 
+      /*
+       * Conectar con el punto anterior.
+       */
       const previous = points[points.length - 1];
 
       if (previous) {
@@ -66,61 +121,122 @@ export class ShapeGenerator {
 
       points.push(point);
 
-      points.push({
-        id: this.nextId++,
-        x,
-        y,
-        type: "main",
-        connections: [],
-      });
+      /*
+       * Algunas veces añadimos un segundo
+       * punto cerca de la trayectoria.
+       *
+       * Esto genera pequeños grupos.
+       */
+      if (Math.random() < 0.35) {
+        const secondaryX = particleX + (Math.random() - 0.5) * 35;
+
+        const secondaryY = particleY + (Math.random() - 0.5) * 35;
+
+        if (
+          secondaryX > 20 &&
+          secondaryX < this.width - 20 &&
+          secondaryY > 20 &&
+          secondaryY < this.height - 20 &&
+          !this.insideForbiddenArea(secondaryX, secondaryY)
+        ) {
+          const secondary: Point = {
+            id: this.nextId++,
+            x: secondaryX,
+            y: secondaryY,
+            type: "main",
+            connections: [],
+          };
+
+          point.connections.push(secondary.id);
+
+          secondary.connections.push(point.id);
+
+          points.push(secondary);
+        }
+      }
     }
 
     return points;
   }
 
   /**
-   * Pequeñas ramas
+   * Ramas secundarias.
    */
   private generateSideBranches(main: Point[]): Point[] {
     const branches: Point[] = [];
 
     for (const point of main) {
-      if (Math.random() < 0.35) {
-        const amount = 2 + Math.floor(Math.random() * 4);
+      /*
+       * No todas las partículas generan ramas.
+       */
+      if (Math.random() > 0.32) {
+        continue;
+      }
 
-        const angle = Math.random() * Math.PI * 2;
+      /*
+       * Ramas de 2 a 5 partículas.
+       */
+      const amount = 2 + Math.floor(Math.random() * 4);
 
-        let previous = point;
+      /*
+       * En lugar de una dirección totalmente
+       * aleatoria, usamos principalmente
+       * direcciones diagonales.
+       */
+      let angle;
 
-        for (let i = 1; i <= amount; i++) {
-          const distance = i * (20 + Math.random() * 12);
+      if (Math.random() < 0.5) {
+        /*
+         * Rama hacia arriba.
+         */
+        angle = -Math.PI / 2 + (Math.random() - 0.5) * 1.2;
+      } else {
+        /*
+         * Rama hacia abajo/lateral.
+         */
+        angle = Math.PI / 2 + (Math.random() - 0.5) * 1.2;
+      }
 
-          const x = previous.x + Math.cos(angle) * distance;
+      let previous = point;
 
-          const y = previous.y + Math.sin(angle) * distance;
+      for (let i = 0; i < amount; i++) {
+        /*
+         * Curvatura pequeña.
+         */
+        angle += (Math.random() - 0.5) * 0.3;
 
-          if (this.insideForbiddenArea(x, y)) continue;
+        const distance = 18 + Math.random() * 14;
 
-          const branch: Point = {
-            id: this.nextId++,
+        const x = previous.x + Math.cos(angle) * distance;
 
-            x,
+        const y = previous.y + Math.sin(angle) * distance;
 
-            y,
-
-            type: "branch",
-
-            connections: [],
-          };
-
-          previous.connections.push(branch.id);
-
-          branch.connections.push(previous.id);
-
-          branches.push(branch);
-
-          previous = branch;
+        /*
+         * Evitar salir del canvas.
+         */
+        if (x < 15 || x > this.width - 15 || y < 15 || y > this.height - 15) {
+          break;
         }
+
+        if (this.insideForbiddenArea(x, y)) {
+          break;
+        }
+
+        const branch: Point = {
+          id: this.nextId++,
+          x,
+          y,
+          type: "branch",
+          connections: [],
+        };
+
+        previous.connections.push(branch.id);
+
+        branch.connections.push(previous.id);
+
+        branches.push(branch);
+
+        previous = branch;
       }
     }
 
@@ -128,13 +244,18 @@ export class ShapeGenerator {
   }
 
   /**
-   * Partículas de ambiente
+   * Partículas ambientales.
    */
   private generateAmbientParticles(amount: number): Point[] {
     const particles: Point[] = [];
 
-    while (particles.length < amount) {
+    let attempts = 0;
+
+    while (particles.length < amount && attempts < amount * 20) {
+      attempts++;
+
       const x = Math.random() * this.width;
+
       const y = Math.random() * this.height;
 
       if (this.insideForbiddenArea(x, y)) {
@@ -154,13 +275,15 @@ export class ShapeGenerator {
   }
 
   /**
-   * Zona donde no queremos partículas
+   * Zona central reservada.
    */
   private insideForbiddenArea(x: number, y: number): boolean {
     const centerX = this.width * 0.28;
+
     const centerY = this.height * 0.52;
 
     const radiusX = this.width * 0.22;
+
     const radiusY = this.height * 0.34;
 
     const dx = x - centerX;

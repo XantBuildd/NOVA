@@ -2,13 +2,14 @@ import { Particle } from "./Particle";
 import { ShapeGenerator } from "./ShapeGenerator";
 import { Physics } from "./Physics";
 import { Mouse } from "./Cursor";
+import { ConnectionSystem } from "./ConnectionSystem";
 
 export class ParticleSystem {
   private particles: Particle[] = [];
 
   private shapeGenerator: ShapeGenerator;
-
   private physics: Physics;
+  private connectionSystem: ConnectionSystem;
 
   constructor(
     private width: number,
@@ -19,6 +20,8 @@ export class ParticleSystem {
     this.shapeGenerator = new ShapeGenerator(width, height);
 
     this.physics = new Physics();
+
+    this.connectionSystem = new ConnectionSystem();
 
     this.createParticles();
   }
@@ -49,6 +52,8 @@ export class ParticleSystem {
   }
 
   public draw(ctx: CanvasRenderingContext2D): void {
+    this.connectionSystem.draw(ctx, this.particles);
+
     for (const particle of this.particles) {
       particle.draw(ctx);
     }
