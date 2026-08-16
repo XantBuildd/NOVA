@@ -1,5 +1,7 @@
 import { TbPointFilled } from "react-icons/tb";
 import Parallax from "./Parallax";
+import ProjectCard from "./ProjectCard";
+import Nova from "@/assets/NovaLogo.png";
 
 const Studio = () => {
   return (
@@ -31,7 +33,26 @@ const Studio = () => {
       <Parallax />
 
       {/* Studio projects */}
-      <article className="flex w-full mt-30 text-amber-50">Hello</article>
+      <article className="flex flex-col gap-3 w-full mt-30 text-amber-50 z-30 mb-10">
+        <ProjectCard
+          title="Project 1"
+          description="Lorem ipsum dolor sit amet"
+          image={Nova}
+          number="01"
+        />
+        <ProjectCard
+          title="Project 2"
+          description="Lorem ipsum dolor sit amet"
+          image={Nova}
+          number="02"
+        />
+        <ProjectCard
+          title="Project 3"
+          description="Lorem ipsum dolor sit amet"
+          image={Nova}
+          number="03"
+        />
+      </article>
     </section>
   );
 };
