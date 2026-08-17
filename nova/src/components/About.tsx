@@ -526,7 +526,7 @@ const About = () => {
             "
             >
               NØVA combines design, technology, motion and three-dimensional
-              experiences to create digital products that don @apos; t simply
+              experiences to create digital products that don &apos; t simply
               work — they leave an impression.
             </p>
 
@@ -543,10 +543,11 @@ const About = () => {
                 uppercase
                 tracking-[0.25em]
                 text-purple-400
+                cursor-pointer
               "
             >
               Explore our universe
-              <FaArrowDown className="rotate-[-90deg]" size={10} />
+              <FaArrowDown className="-rotate-90deg" size={10} />
             </motion.div>
           </motion.div>
         </div>
