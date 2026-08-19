@@ -1,25 +1,41 @@
 import { Particle } from "./Particle";
 
 export class ConnectionSystem {
-  constructor(private maxDistance = 120) {}
+  private particleMap = new Map<number, Particle>();
 
-  public draw(ctx: CanvasRenderingContext2D, particles: Particle[]): void {
-    const particleMap = new Map<number, Particle>();
+  constructor(
+    private maxDistance = 120,
+    private isMobile = false,
+  ) {}
+
+  public setParticles(particles: Particle[]): void {
+    this.particleMap.clear();
 
     for (const particle of particles) {
-      particleMap.set(particle.id, particle);
+      this.particleMap.set(particle.id, particle);
+    }
+  }
+
+  public draw(ctx: CanvasRenderingContext2D, particles: Particle[]): void {
+    if (this.particleMap.size === 0) {
+      this.setParticles(particles);
     }
 
     for (const particle of particles) {
-      if (particle.type === "ambient") continue;
+      if (particle.type === "ambient") {
+        continue;
+      }
 
       for (const connectionId of particle.connections) {
-        // Prevent drawing twice
-        if (particle.id > connectionId) continue;
+        if (particle.id > connectionId) {
+          continue;
+        }
 
-        const target = particleMap.get(connectionId);
+        const target = this.particleMap.get(connectionId);
 
-        if (!target) continue;
+        if (!target) {
+          continue;
+        }
 
         this.drawConnection(ctx, particle, target);
       }
@@ -34,15 +50,19 @@ export class ConnectionSystem {
     const dx = b.x - a.x;
     const dy = b.y - a.y;
 
-    const distance = Math.hypot(dx, dy);
+    const distanceSquared = dx * dx + dy * dy;
 
-    if (distance > this.maxDistance) return;
+    const maxDistanceSquared = this.maxDistance * this.maxDistance;
+
+    if (distanceSquared > maxDistanceSquared) {
+      return;
+    }
+
+    const distance = Math.sqrt(distanceSquared);
 
     const opacity = 1 - distance / this.maxDistance;
 
     const depth = (a.depth + b.depth) * 0.5;
-
-    ctx.save();
 
     ctx.beginPath();
 
@@ -54,12 +74,6 @@ export class ConnectionSystem {
 
     ctx.strokeStyle = `rgba(192,132,252,${opacity * 0.55})`;
 
-    ctx.shadowBlur = 3 + depth * 6;
-
-    ctx.shadowColor = "#C084FC";
-
     ctx.stroke();
-
-    ctx.restore();
   }
 }

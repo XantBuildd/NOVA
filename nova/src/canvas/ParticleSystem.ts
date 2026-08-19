@@ -16,12 +16,16 @@ export class ParticleSystem {
     private height: number,
     private amount: number,
     private mouse: Mouse,
+    private isMobile: boolean,
   ) {
     this.shapeGenerator = new ShapeGenerator(width, height);
 
     this.physics = new Physics();
 
-    this.connectionSystem = new ConnectionSystem();
+    this.connectionSystem = new ConnectionSystem(
+      isMobile ? 100 : 120,
+      isMobile,
+    );
 
     this.createParticles();
   }
@@ -40,9 +44,12 @@ export class ParticleSystem {
           depth,
           point.type,
           point.connections,
+          this.isMobile,
         ),
       );
     }
+
+    this.connectionSystem.setParticles(this.particles);
   }
 
   public update(): void {

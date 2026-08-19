@@ -3,8 +3,10 @@
 import { useEffect, useRef } from "react";
 import { Engine } from "@/canvas/Engine";
 
-const Canvas = () => {
+export default function ParticleCanvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  const engineRef = useRef<Engine | null>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -13,25 +15,29 @@ const Canvas = () => {
 
     const engine = new Engine(canvas);
 
+    engineRef.current = engine;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        engine.setVisibility(entry.isIntersecting);
+      },
+      {
+        threshold: 0.05,
+      },
+    );
+
+    observer.observe(canvas);
+
     engine.start();
 
     return () => {
+      observer.disconnect();
+
       engine.stop();
+
+      engineRef.current = null;
     };
   }, []);
 
-  return (
-    <canvas
-      ref={canvasRef}
-      id="canvas"
-      className="
-        absolute
-        inset-0
-        h-full
-        w-full
-      "
-    />
-  );
-};
-
-export default Canvas;
+  return <canvas ref={canvasRef} className="absolute inset-0 h-full w-full" />;
+}
