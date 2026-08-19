@@ -29,7 +29,7 @@ export class Engine {
 
     const isMobile = window.innerWidth < 768;
 
-    const particleAmount = isMobile ? 60 : 300;
+    const particleAmount = isMobile ? 280 : 300;
 
     this.particleSystem = new ParticleSystem(
       this.width,
