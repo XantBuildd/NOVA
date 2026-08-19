@@ -20,15 +20,21 @@ const ProjectCard = ({
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
+  // Tilt
+
   const rotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], [5, -5]), {
-    stiffness: 150,
-    damping: 20,
+    stiffness: 180,
+    damping: 22,
+    mass: 0.5,
   });
 
   const rotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-5, 5]), {
-    stiffness: 150,
-    damping: 20,
+    stiffness: 180,
+    damping: 22,
+    mass: 0.5,
   });
+
+  // Mouse
 
   const handleMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
     const rect = event.currentTarget.getBoundingClientRect();
@@ -54,32 +60,48 @@ const ProjectCard = ({
       }}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      whileHover={{ scale: 1.015 }}
+      whileHover={{
+        scale: 1.012,
+      }}
       transition={{
         scale: {
-          duration: 0.4,
-          ease: "easeOut",
+          duration: 0.45,
+          ease: [0.22, 1, 0.36, 1],
         },
       }}
       className="
         group
         relative
         w-full
-        h-30
+        h-55
+        sm:h-65
+        md:h-75
+        lg:h-85
+        xl:h-95
         overflow-hidden
-        rounded-4xl
+        rounded-3xl
+        sm:rounded-4xl
+        lg:rounded-[2.5rem]
         bg-black
         cursor-pointer
-        perspective-[1000px]
+        perspective-ditant
+        transform-gpu
+        will-change-transform
       "
     >
-      {/* background image */}
+      {/* Image */}
 
       <motion.div
-        className="absolute inset-0"
-        whileHover={{ scale: 1.08 }}
+        className="
+          absolute
+          inset-0
+          transform-gpu
+        "
+        whileHover={{
+          scale: 1.06,
+        }}
         transition={{
-          duration: 0.8,
+          duration: 1,
           ease: [0.22, 1, 0.36, 1],
         }}
       >
@@ -87,142 +109,255 @@ const ProjectCard = ({
           src={image}
           alt={`Project ${title}`}
           fill
-          priority
-          className="object-cover"
+          sizes="
+            (max-width: 640px) 100vw,
+            (max-width: 1024px) 90vw,
+            1200px
+          "
+          className="
+            object-cover
+            object-center
+            transition-transform
+            duration-700
+          "
         />
       </motion.div>
 
-      {/* dark overlay */}
+      {/* Image Gradient */}
 
       <div
         className="
           absolute
           inset-0
           bg-linear-to-t
-          from-black/90
-          via-black/30
-          to-black/10
+          from-black/95
+          via-black/35
+          to-black/5
         "
       />
 
-      {/* purple glow */}
-
-      <motion.div
-        className="
-          absolute
-          -right-16
-          -top-20
-          w-40
-          h-40
-          rounded-full
-          bg-purple-600/30
-          blur-[70px]
-          pointer-events-none
-        "
-        whileHover={{
-          scale: 1.5,
-          opacity: 0.7,
-        }}
-        transition={{
-          duration: 0.8,
-        }}
-      />
-
-      {/* border */}
+      {/* Extra Mobile Gradient */}
 
       <div
         className="
           absolute
           inset-0
-          rounded-4xl
-          border
-          border-white/10
-          group-hover:border-purple-400/40
-          transition-colors
-          duration-500
+          bg-linear-to-r
+          from-black/20
+          via-transparent
+          to-black/20
+          pointer-events-none
         "
       />
 
-      {/* content */}
+      {/* Purple Glow */}
+
+      <motion.div
+        className="
+          pointer-events-none
+          absolute
+          -right-20
+          -top-24
+          h-44
+          w-44
+          sm:h-52
+          sm:w-52
+          rounded-full
+          bg-purple-600/25
+          blur-[70px]
+
+          sm:blur-[85px]
+        "
+        whileHover={{
+          scale: 1.4,
+          opacity: 0.8,
+        }}
+        transition={{
+          duration: 0.8,
+          ease: [0.22, 1, 0.36, 1],
+        }}
+      />
+
+      {/* Border */}
+
+      <motion.div
+        className="
+          pointer-events-none
+          absolute
+          inset-0
+          rounded-3xl
+          sm:rounded-4xl
+          lg:rounded-[2.5rem]
+          border
+          border-white/10
+        "
+        whileHover={{
+          borderColor: "rgba(192,132,252,0.4)",
+        }}
+        transition={{
+          duration: 0.5,
+        }}
+      />
+
+      {/* Content */}
 
       <div
         className="
           relative
           z-10
-          w-full
-          h-full
-          p-4
           flex
+          h-full
+          w-full
           flex-col
           justify-between
+          p-4
+          sm:p-5
+          md:p-6
+          lg:p-7
+          xl:p-8
         "
       >
-        {/* top */}
+        {/* Top */}
 
         <div className="flex items-start justify-between">
-          <span className="text-xs text-white/50 font-mono">{number}</span>
+          {/* Number */}
+
+          <span
+            className="
+              font-mono
+              text-[10px]
+              tracking-wider
+              text-white/50
+
+              sm:text-xs
+            "
+          >
+            {number}
+          </span>
+
+          {/* Arrow */}
 
           <motion.div
             whileHover={{
               rotate: 45,
-              scale: 1.15,
+              scale: 1.12,
+            }}
+            transition={{
+              duration: 0.4,
+              ease: [0.22, 1, 0.36, 1],
             }}
             className="
-              w-8
+              flex
               h-8
+              w-8
+              items-center
+              justify-center
               rounded-full
               border
               border-white/20
               bg-black/20
               backdrop-blur-md
-              flex
-              items-center
-              justify-center
+              sm:h-9
+              sm:w-9
+              md:h-10
+              md:w-10
             "
           >
-            <FaArrowRight size={12} className="text-white" />
+            <FaArrowRight
+              size={11}
+              className="
+                text-white
+
+                sm:text-xs
+              "
+            />
           </motion.div>
         </div>
 
-        {/* bottom */}
+        {/* Bottom */}
 
         <motion.div
-          initial={{ y: 5 }}
-          whileHover={{ y: 0 }}
-          transition={{ duration: 0.4 }}
+          initial={{
+            y: 6,
+          }}
+          whileHover={{
+            y: 0,
+          }}
+          transition={{
+            duration: 0.45,
+            ease: [0.22, 1, 0.36, 1],
+          }}
         >
-          <div className="flex items-end justify-between gap-4">
-            <div>
-              <p className="mb-1 text-[9px] uppercase tracking-[0.25em] text-purple-300">
+          <div
+            className="
+              flex
+              flex-col
+              gap-3
+
+              md:flex-row
+              md:items-end
+              md:justify-between
+            "
+          >
+            {/* Project info */}
+
+            <div className="min-w-0">
+              <p
+                className="
+                  mb-1.5
+
+                  text-[8px]
+                  uppercase
+                  tracking-[0.25em]
+
+                  text-purple-300/90
+
+                  sm:text-[9px]
+                "
+              >
                 Selected project
               </p>
 
               <h3
                 className="
                   text-lg
-                  md:text-xl
                   font-medium
-                  tracking-tight
-                  text-white
                   leading-none
-                  mb-3
+                  tracking-[-0.02em]
+                  text-white
+
+                  sm:text-xl
+
+                  md:text-2xl
+
+                  lg:text-3xl
                 "
               >
                 {title}
               </h3>
             </div>
 
+            {/* Description */}
+
             <p
               className="
-                hidden
-                md:block
-                max-w-62.5
-                text-xs
-                leading-relaxed
+                max-w-full
+
+                text-[10px]
+                leading-normal
+
                 text-white/50
-                group-hover:text-white/80
+
                 transition-colors
                 duration-500
+
+                sm:text-xs
+
+                md:max-w-55
+
+                lg:max-w-70
+
+                md:group-hover:text-white/80
               "
             >
               {description}

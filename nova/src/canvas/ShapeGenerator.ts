@@ -19,201 +19,142 @@ export class ShapeGenerator {
   public generateConstellation(amount: number): Point[] {
     const points: Point[] = [];
 
-    /*
-     * La estructura principal ocupa aproximadamente
-     * la mitad de las partículas.
-     */
-    const mainAmount = Math.floor(amount * 0.6);
+    const mainAmount = Math.floor(amount * 0.76);
 
     const main = this.generateMainBranch(mainAmount);
 
     points.push(...main);
 
-    /*
-     * Ramas secundarias alrededor de la estructura.
-     */
-    points.push(...this.generateSideBranches(main));
+    const branches = this.generateSideBranches(main);
 
-    /*
-     * Partículas pequeñas alrededor.
-     */
-    points.push(...this.generateAmbientParticles(Math.floor(amount * 0.35)));
+    points.push(...branches);
+
+    const ambientAmount = Math.floor(amount * 0.14);
+
+    points.push(...this.generateAmbientParticles(ambientAmount));
 
     return points;
   }
 
-  /**
-   * Rama principal.
-   *
-   * Mantiene la idea original:
-   *
-   *       •
-   *        •
-   *         •
-   *          •
-   *           •
-   *            •
-   *
-   * Pero con pequeñas variaciones para que
-   * cada generación sea diferente.
-   */
   private generateMainBranch(amount: number): Point[] {
     const points: Point[] = [];
 
-    let x = this.width * 0.88;
-    let y = this.height * 0.08;
+    const isMobile = this.width < 768;
+
+    const centerX = isMobile ? this.width * 0.5 : this.width * 0.68;
+
+    const centerY = this.height * 0.5;
+
+    const radius = isMobile
+      ? Math.min(this.width, this.height) * 0.72
+      : Math.min(this.width, this.height) * 0.38;
+
+    const goldenAngle = Math.PI * (3 - Math.sqrt(5));
 
     for (let i = 0; i < amount; i++) {
-      /*
-       * Movimiento principal controlado.
-       *
-       * No dejamos que X se vaya demasiado rápido
-       * hacia la izquierda.
-       */
-      x -= this.width * 0.022;
+      const normalized = 1 - (i / Math.max(amount - 1, 1)) * 2;
 
-      y += this.height * 0.048;
+      const ringRadius = Math.sqrt(Math.max(0, 1 - normalized * normalized));
 
-      /*
-       * Variación orgánica.
-       */
-      const offsetX = (Math.random() - 0.5) * 45;
+      const angle = goldenAngle * i;
 
-      const offsetY = (Math.random() - 0.5) * 35;
+      const distortion =
+        1 + Math.sin(i * 0.37) * 0.035 + Math.sin(i * 0.13) * 0.02;
 
-      const particleX = x + offsetX;
-      const particleY = y + offsetY;
+      const organicOffset = isMobile ? 3 : 5;
 
-      /*
-       * Evitamos partículas fuera de pantalla.
-       */
-      if (
-        particleX < 20 ||
-        particleX > this.width - 20 ||
-        particleY < 20 ||
-        particleY > this.height - 20
-      ) {
+      let x = centerX + Math.cos(angle) * ringRadius * radius * distortion;
+
+      let y = centerY + normalized * radius * distortion;
+
+      x += Math.sin(i * 1.73) * organicOffset;
+
+      y += Math.cos(i * 1.37) * organicOffset;
+
+      if (x < 20 || x > this.width - 20 || y < 20 || y > this.height - 20) {
         continue;
       }
 
-      if (this.insideForbiddenArea(particleX, particleY)) {
+      if (this.insideForbiddenArea(x, y)) {
         continue;
       }
 
-      const point: Point = {
+      points.push({
         id: this.nextId++,
-        x: particleX,
-        y: particleY,
+        x,
+        y,
         type: "main",
         connections: [],
-      };
-
-      /*
-       * Conectar con el punto anterior.
-       */
-      const previous = points[points.length - 1];
-
-      if (previous) {
-        previous.connections.push(point.id);
-
-        point.connections.push(previous.id);
-      }
-
-      points.push(point);
-
-      /*
-       * Algunas veces añadimos un segundo
-       * punto cerca de la trayectoria.
-       *
-       * Esto genera pequeños grupos.
-       */
-      if (Math.random() < 0.35) {
-        const secondaryX = particleX + (Math.random() - 0.5) * 35;
-
-        const secondaryY = particleY + (Math.random() - 0.5) * 35;
-
-        if (
-          secondaryX > 20 &&
-          secondaryX < this.width - 20 &&
-          secondaryY > 20 &&
-          secondaryY < this.height - 20 &&
-          !this.insideForbiddenArea(secondaryX, secondaryY)
-        ) {
-          const secondary: Point = {
-            id: this.nextId++,
-            x: secondaryX,
-            y: secondaryY,
-            type: "main",
-            connections: [],
-          };
-
-          point.connections.push(secondary.id);
-
-          secondary.connections.push(point.id);
-
-          points.push(secondary);
-        }
-      }
+      });
     }
+
+    this.connectOrbitalMesh(points);
 
     return points;
   }
 
-  /**
-   * Ramas secundarias.
-   */
+  private connectOrbitalMesh(points: Point[]) {
+    const isMobile = this.width < 768;
+
+    const maxDistance =
+      Math.min(this.width, this.height) * (isMobile ? 0.2 : 0.14);
+
+    const maxConnections = isMobile ? 6 : 5;
+
+    for (const point of points) {
+      const neighbors = points
+        .filter((candidate) => candidate.id !== point.id)
+        .map((candidate) => {
+          const dx = point.x - candidate.x;
+
+          const dy = point.y - candidate.y;
+
+          const distance = Math.sqrt(dx * dx + dy * dy);
+
+          return {
+            point: candidate,
+            distance,
+          };
+        })
+        .filter(({ distance }) => distance < maxDistance)
+        .sort((a, b) => a.distance - b.distance)
+        .slice(0, maxConnections);
+
+      for (const neighbor of neighbors) {
+        if (!point.connections.includes(neighbor.point.id)) {
+          point.connections.push(neighbor.point.id);
+        }
+
+        if (!neighbor.point.connections.includes(point.id)) {
+          neighbor.point.connections.push(point.id);
+        }
+      }
+    }
+  }
+
   private generateSideBranches(main: Point[]): Point[] {
     const branches: Point[] = [];
 
     for (const point of main) {
-      /*
-       * No todas las partículas generan ramas.
-       */
-      if (Math.random() > 0.32) {
+      if (Math.random() > 0.22) {
         continue;
       }
 
-      /*
-       * Ramas de 2 a 5 partículas.
-       */
-      const amount = 2 + Math.floor(Math.random() * 4);
+      const amount = 1 + Math.floor(Math.random() * 3);
 
-      /*
-       * En lugar de una dirección totalmente
-       * aleatoria, usamos principalmente
-       * direcciones diagonales.
-       */
-      let angle;
-
-      if (Math.random() < 0.5) {
-        /*
-         * Rama hacia arriba.
-         */
-        angle = -Math.PI / 2 + (Math.random() - 0.5) * 1.2;
-      } else {
-        /*
-         * Rama hacia abajo/lateral.
-         */
-        angle = Math.PI / 2 + (Math.random() - 0.5) * 1.2;
-      }
+      let angle = Math.random() * Math.PI * 2;
 
       let previous = point;
 
       for (let i = 0; i < amount; i++) {
-        /*
-         * Curvatura pequeña.
-         */
-        angle += (Math.random() - 0.5) * 0.3;
+        angle += (Math.random() - 0.5) * 0.8;
 
-        const distance = 18 + Math.random() * 14;
+        const distance = 12 + Math.random() * 12;
 
         const x = previous.x + Math.cos(angle) * distance;
 
         const y = previous.y + Math.sin(angle) * distance;
 
-        /*
-         * Evitar salir del canvas.
-         */
         if (x < 15 || x > this.width - 15 || y < 15 || y > this.height - 15) {
           break;
         }
@@ -243,20 +184,33 @@ export class ShapeGenerator {
     return branches;
   }
 
-  /**
-   * Partículas ambientales.
-   */
   private generateAmbientParticles(amount: number): Point[] {
     const particles: Point[] = [];
 
+    const isMobile = this.width < 768;
+
+    const centerX = isMobile ? this.width * 0.5 : this.width * 0.68;
+
+    const centerY = this.height * 0.5;
+
+    const radius = Math.min(this.width, this.height) * (isMobile ? 0.82 : 0.48);
+
     let attempts = 0;
 
-    while (particles.length < amount && attempts < amount * 20) {
+    while (particles.length < amount && attempts < amount * 30) {
       attempts++;
 
-      const x = Math.random() * this.width;
+      const angle = Math.random() * Math.PI * 2;
 
-      const y = Math.random() * this.height;
+      const distance = radius * (0.9 + Math.random() * 0.35);
+
+      const x = centerX + Math.cos(angle) * distance;
+
+      const y = centerY + Math.sin(angle) * distance;
+
+      if (x < 10 || x > this.width - 10 || y < 10 || y > this.height - 10) {
+        continue;
+      }
 
       if (this.insideForbiddenArea(x, y)) {
         continue;
@@ -274,19 +228,19 @@ export class ShapeGenerator {
     return particles;
   }
 
-  /**
-   * Zona central reservada.
-   */
   private insideForbiddenArea(x: number, y: number): boolean {
-    const centerX = this.width * 0.28;
+    const isMobile = this.width < 768;
+
+    const centerX = isMobile ? this.width * 0.5 : this.width * 0.28;
 
     const centerY = this.height * 0.52;
 
-    const radiusX = this.width * 0.22;
+    const radiusX = this.width * (isMobile ? 0.16 : 0.22);
 
-    const radiusY = this.height * 0.34;
+    const radiusY = this.height * (isMobile ? 0.22 : 0.34);
 
     const dx = x - centerX;
+
     const dy = y - centerY;
 
     return (

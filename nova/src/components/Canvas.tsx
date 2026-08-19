@@ -1,5 +1,6 @@
 "use client";
-import { useRef, useEffect } from "react";
+
+import { useEffect, useRef } from "react";
 import { Engine } from "@/canvas/Engine";
 
 const Canvas = () => {
@@ -7,10 +8,8 @@ const Canvas = () => {
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
 
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
+    if (!canvas) return;
 
     const engine = new Engine(canvas);
 
@@ -25,8 +24,13 @@ const Canvas = () => {
     <canvas
       ref={canvasRef}
       id="canvas"
-      className="absolute inset-0 w-full h-[calc(100vh-3rem)] mt-16 z-0"
-    ></canvas>
+      className="
+        absolute
+        inset-0
+        h-full
+        w-full
+      "
+    />
   );
 };
 

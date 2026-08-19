@@ -221,14 +221,14 @@ const Navbar = () => {
         />
         <ul
           className="
-    hidden
+              hidden
 
-    md:flex
-    md:items-center
-    md:gap-1
+              md:flex
+              md:items-center
+              md:gap-1
 
-    lg:gap-2
-  "
+              lg:gap-2
+            "
         >
           {navItems.map((item) => {
             const isActive = activeSection === item.id;
@@ -239,23 +239,23 @@ const Navbar = () => {
                   type="button"
                   onClick={() => scrollToSection(item.id)}
                   className="
-            relative
+                    relative
 
-            rounded-full
+                    rounded-full
 
-            px-4
-            py-2
+                    px-4
+                    py-2
 
-            text-[9px]
-            uppercase
-            tracking-[0.2em]
+                    text-[9px]
+                    uppercase
+                    tracking-[0.2em]
 
-            transition-colors
-            duration-300
+                    transition-colors
+                    duration-300
 
-            lg:px-5
-            lg:text-[10px]
-          "
+                    lg:px-5
+                    lg:text-[10px]
+                  "
                 >
                   {/* Active background */}
 
@@ -263,13 +263,13 @@ const Navbar = () => {
                     <motion.span
                       layoutId="desktop-navbar-active"
                       className="
-                absolute
-                inset-0
+                          absolute
+                          inset-0
 
-                rounded-full
+                          rounded-full
 
-                bg-white
-              "
+                          bg-white
+                        "
                       transition={{
                         type: "spring",
                         stiffness: 400,
@@ -280,14 +280,14 @@ const Navbar = () => {
 
                   <span
                     className={`
-              relative
-              z-10
+                    relative
+                    z-10
 
-              transition-colors
-              duration-300
+                    transition-colors
+                    duration-300
 
-              ${isActive ? "text-black" : "text-white/50 hover:text-white"}
-            `}
+                    ${isActive ? "text-black" : "text-white/50 hover:text-white"}
+                  `}
                   >
                     {item.label}
                   </span>

@@ -566,32 +566,24 @@ export default function Contact() {
             }}
             className="
               mt-12
-
               w-full
-
               rounded-[1.25rem]
-
               border
               border-white/8
-
               bg-white/[0.035]
-
               p-5
-
               backdrop-blur-xl
-
               sm:mt-14
               sm:rounded-3xl
               sm:p-7
-
               md:p-8
-
               lg:mt-0
-              lg:max-w-130
+              lg:w-[500px]
+              lg:max-w-[500px]
               lg:self-end
               lg:p-9
-
-              xl:max-w-140
+              xl:w-[540px]
+              xl:max-w-[540px]
               xl:p-10
             "
           >
@@ -970,22 +962,25 @@ export default function Contact() {
           <div
             className="
               pointer-events-none
-
               absolute
 
-              right-17.5
-              top-[43%]
-
               hidden
-
-              h-45
-              w-45
-
               lg:block
 
-              xl:right-[5%]
-              xl:h-57.5
-              xl:w-57.5
+              left-[20%]
+              top-[72%]
+
+              h-80
+              w-80
+
+              -translate-x-1/2
+              -translate-y-1/2
+
+              xl:left-[20%]
+              xl:top-[70%]
+
+              xl:h-100
+              xl:w-100
             "
           >
             {/* Outer orbit */}
@@ -1088,8 +1083,8 @@ export default function Contact() {
                 left-1/2
                 top-1/2
 
-                h-8
-                w-8
+                h-20
+                w-20
 
                 -translate-x-1/2
                 -translate-y-1/2
@@ -1103,8 +1098,8 @@ export default function Contact() {
 
                 shadow-[0_0_45px_rgba(139,92,246,0.6)]
 
-                xl:h-10
-                xl:w-10
+                xl:h-30
+                xl:w-30
               "
             />
           </div>

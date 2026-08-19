@@ -10,6 +10,8 @@ export class Engine {
   private particleSystem: ParticleSystem;
   private renderer: Renderer;
 
+  private animationFrameId: number | null = null;
+
   constructor(canvas: HTMLCanvasElement) {
     this.canvas = canvas;
 
@@ -32,6 +34,10 @@ export class Engine {
   }
 
   public start(): void {
+    if (this.animationFrameId !== null) {
+      return;
+    }
+
     this.loop();
   }
 
@@ -40,7 +46,7 @@ export class Engine {
 
     this.render();
 
-    requestAnimationFrame(this.loop);
+    this.animationFrameId = requestAnimationFrame(this.loop);
   };
 
   private update(): void {
@@ -59,6 +65,14 @@ export class Engine {
   };
 
   public stop(): void {
-    window.removeEventListener("resize", () => this.resize());
+    if (this.animationFrameId !== null) {
+      cancelAnimationFrame(this.animationFrameId);
+
+      this.animationFrameId = null;
+    }
+
+    window.removeEventListener("resize", this.resize);
+
+    this.mouse.destroy();
   }
 }
