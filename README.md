@@ -18,6 +18,8 @@
 
 A short walkthrough of NØVA showcasing the interface, motion design, navigation and interactive visual experience.
 
+ * Link: [Nova - Studios](https://nova-studios.up.railway.app)
+
 [Video](https://github.com/user-attachments/assets/0943be8e-e28c-4285-b077-95804c3d19a6)
 
 ---
